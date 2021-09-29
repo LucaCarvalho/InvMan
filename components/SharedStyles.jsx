@@ -18,6 +18,7 @@ const sharedStyles = StyleSheet.create({
         flex: 0.05,
         padding: 20,
         backgroundColor: "orange",
+        justifyContent: "space-evenly",
     },
 });
 

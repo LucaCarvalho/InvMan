@@ -4,10 +4,10 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 import React from "react";
-import { StyleSheet, Platform, StatusBar, View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
-import { sharedStyles } from "./SharedStyles";
-import { expo } from "../app.json";
+import { sharedStyles } from "../SharedStyles";
+import { expo } from "../../app.json";
 
 export default function About() {
     return (
