@@ -5,23 +5,20 @@
 
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import DbHandler from "../../database/DbHandler";
 import { sharedStyles } from "../SharedStyles";
 import SimpleButton from "../SimpleButton";
 import SimpleNavbar from "../SimpleNavbar";
 import TextInputWButton from "../TextInputWButton";
 
-import * as SQLite from "expo-sqlite";
-
-const db = SQLite.openDatabase("invman");
-
 export default function EditInventoryProperties({ navigation, route }) {
-    console.log(route.params);
+    let db = new DbHandler();
     return (
         <View style={[sharedStyles.container, styles.container]}>
             <View style={[sharedStyles.content, styles.content]}>
                 <TextInputWButton
                     onSubmit={(newInvName) =>
-                        updateInventory(
+                        db.updateInventory(
                             route.params.inv_id,
                             newInvName,
                             navigation.goBack
@@ -35,7 +32,9 @@ export default function EditInventoryProperties({ navigation, route }) {
                 <SimpleButton
                     backgroundColor="tomato"
                     onPress={() =>
-                        deleteInventory(route.params.inv_id, navigation.goBack)
+                        db.deleteInventory(route.params.inv_id, () =>
+                            navigation.navigate("Home")
+                        )
                     }
                 >
                     🗑️
@@ -43,28 +42,6 @@ export default function EditInventoryProperties({ navigation, route }) {
             </SimpleNavbar>
         </View>
     );
-}
-
-function updateInventory(inv_id, inv_name, goBackFunction) {
-    db.transaction((tx) => {
-        tx.executeSql(
-            "UPDATE inventories SET inv_name=? WHERE inv_id=?",
-            [inv_name, inv_id],
-            (_, { rows: { _array } }) => goBackFunction(),
-            (t, err) => console.log("ERROR: ", err)
-        );
-    });
-}
-
-function deleteInventory(inv_id, goBackFunction) {
-    db.transaction((tx) => {
-        tx.executeSql(
-            "DELETE FROM inventories WHERE inv_id=?",
-            [inv_id],
-            (_, { rows: { _array } }) => goBackFunction(),
-            (t, err) => console.log("ERROR: ", err)
-        );
-    });
 }
 
 const styles = StyleSheet.create({

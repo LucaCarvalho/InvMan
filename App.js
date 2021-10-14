@@ -14,26 +14,12 @@ import Home from "./components/screens/Home";
 import About from "./components/screens/About";
 import NewInventory from "./components/screens/NewInventory";
 import EditInventoryProperties from "./components/screens/EditInventoryProperties";
+import DbHandler from "./database/DbHandler";
 
 const Stack = createNativeStackNavigator();
-const db = SQLite.openDatabase("invman");
 
 export default function App() {
-    React.useEffect(() => {
-        db.transaction(
-            (tx) => {
-                tx.executeSql(
-                    "CREATE TABLE IF NOT EXISTS inventories (inv_id INTEGER PRIMARY KEY NOT NULL, inv_name TEXT NOT NULL);"
-                );
-            },
-            [],
-            (t, res) => {
-                //console.log(res);
-            },
-            (t, err) => console.log(err)
-        );
-    }, []);
-
+    let db = new DbHandler(true);
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">

@@ -5,24 +5,21 @@
 
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import DbHandler from "../../database/DbHandler";
 import { sharedStyles } from "../SharedStyles";
 import SimpleNavbar from "../SimpleNavbar";
 import TextInputWButton from "../TextInputWButton";
 
-import * as SQLite from "expo-sqlite";
-
-const db = SQLite.openDatabase("invman");
-
 export default function NewInventory({ navigation }) {
+    let db = new DbHandler();
     return (
         <View style={[sharedStyles.container, styles.container]}>
             <View style={[sharedStyles.content, styles.content]}>
                 <TextInputWButton
                     placeholder={"Inventory name"}
                     onSubmit={(inventoryName) => {
-                        dbCreateInventory(inventoryName);
-                        navigation.navigate("Home");
-                        //TODO: check for errors
+                        db.createInventory(inventoryName);
+                        navigation.goBack();
                     }}
                 ></TextInputWButton>
             </View>
@@ -31,17 +28,6 @@ export default function NewInventory({ navigation }) {
             ></SimpleNavbar>
         </View>
     );
-}
-
-function dbCreateInventory(inventoryName) {
-    db.transaction((tx) => {
-        tx.executeSql(
-            "INSERT INTO inventories (inv_name) VALUES (?);",
-            [inventoryName],
-            () => {},
-            (t, err) => console.log(err)
-        );
-    });
 }
 
 const styles = StyleSheet.create({
