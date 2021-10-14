@@ -19,16 +19,16 @@ import * as SQLite from "expo-sqlite";
 
 const db = SQLite.openDatabase("invman");
 
-class Home extends React.Component {
+class InventoryItems extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { inventories: {} };
-        this.getInventories();
+        this.state = { items: {} };
+        this.getItems();
     }
 
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener("focus", () => {
-            this.getInventories();
+            this.getItems();
         });
     }
 
@@ -39,52 +39,69 @@ class Home extends React.Component {
                 <SimpleNavbar style={[sharedStyles.optionsBar]}>
                     <SimpleButton
                         onPress={() =>
-                            this.props.navigation.navigate("New Inventory")
+                            this.props.navigation.navigate("New Item", {
+                                inv_id: this.props.route.params.inv_id,
+                            })
                         }
                     >
                         +
+                    </SimpleButton>
+                    <SimpleButton
+                        onPress={() =>
+                            this.props.navigation.navigate("Edit Inventory", {
+                                inv_id: this.props.route.params.inv_id,
+                                inv_name: this.props.route.params.inv_name,
+                            })
+                        }
+                    >
+                        ✏️
                     </SimpleButton>
                 </SimpleNavbar>
             </View>
         );
     }
 
-    getInventories = () => {
+    getItems = () => {
         db.transaction((tx) => {
             tx.executeSql(
-                "SELECT * FROM inventories",
-                [],
+                "SELECT * FROM items WHERE inv_id=?",
+                [this.props.route.params.inv_id],
                 (_, { rows: { _array } }) =>
-                    this.setState({ inventories: _array.reverse() }),
+                    this.setState({ items: _array.reverse() }),
                 (t, err) => console.log("ERROR: ", err)
             );
         });
     };
 
     generateList = () => {
-        if (Object.keys(this.state.inventories).length === 0) {
+        if (Object.keys(this.state.items).length === 0) {
             return (
                 <View style={[sharedStyles.content, styles.content]}>
-                    <Text>Inventories will be displayed here</Text>
+                    <Text>Items will be displayed here</Text>
                 </View>
             );
         } else {
             return (
                 <View style={[sharedStyles.content]}>
                     <ScrollView contentContainerStyle={[styles.scrollView]}>
-                        {this.state.inventories.map((inventory) => (
-                            <TouchableOpacity
-                                style={styles.inventoryCard}
-                                onPress={() =>
-                                    this.props.navigation.navigate(
-                                        "Inventory",
-                                        inventory
-                                    )
-                                }
-                                key={inventory.inv_id}
-                            >
-                                <Text>{inventory.inv_name}</Text>
-                            </TouchableOpacity>
+                        {this.state.items.map((item) => (
+                            <View style={styles.inventoryCard}>
+                                <TouchableOpacity
+                                    style={styles.inventoryTouchable}
+                                    onPress={() =>
+                                        this.props.navigation.navigate(
+                                            "Edit Item",
+                                            item
+                                        )
+                                    }
+                                    key={item.item_id + "_" + item.inv_id}
+                                >
+                                    <Text>{item.item_name}</Text>
+                                </TouchableOpacity>
+                                <Text key={item.item_id * -1}>
+                                    {item.item_qty}
+                                </Text>
+                            </View>
                         ))}
                     </ScrollView>
                 </View>
@@ -93,7 +110,7 @@ class Home extends React.Component {
     };
 }
 
-export default Home;
+export default InventoryItems;
 
 const styles = StyleSheet.create({
     container: {
@@ -108,7 +125,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     inventoryCard: {
-        height: 80,
+        flexDirection: "row",
+        height: 50,
         //flex: 0.4,
         width: "98%",
         borderRadius: 10,
@@ -116,9 +134,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         alignItems: "center",
-        backgroundColor: "seashell",
+        backgroundColor: "white",
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: "space-between",
         marginVertical: 2,
+    },
+    inventoryTouchable: {
+        flex: 0.8,
     },
 });

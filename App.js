@@ -7,13 +7,15 @@ import React from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as SQLite from "expo-sqlite";
 
 import TopNavbar from "./components/TopNavbar";
 import Home from "./components/screens/Home";
 import About from "./components/screens/About";
 import NewInventory from "./components/screens/NewInventory";
 import EditInventoryProperties from "./components/screens/EditInventoryProperties";
+import InventoryItems from "./components/screens/InventoryItems";
+import NewItem from "./components/screens/NewItem";
+import EditItemProperties from "./components/screens/EditItemProperties";
 import DbHandler from "./database/DbHandler";
 
 const Stack = createNativeStackNavigator();
@@ -55,6 +57,36 @@ export default function App() {
                 <Stack.Screen
                     name="Edit Inventory"
                     component={EditInventoryProperties}
+                    options={{
+                        headerShown: true,
+                        header: TopNavbar,
+                        statusBarHidden: false,
+                        animation: "slide_from_right",
+                    }}
+                />
+                <Stack.Screen
+                    name="Inventory"
+                    component={InventoryItems}
+                    options={{
+                        headerShown: true,
+                        header: TopNavbar,
+                        statusBarHidden: false,
+                        animation: "slide_from_right",
+                    }}
+                />
+                <Stack.Screen
+                    name="New Item"
+                    component={NewItem}
+                    options={{
+                        headerShown: true,
+                        header: TopNavbar,
+                        statusBarHidden: false,
+                        animation: "slide_from_right",
+                    }}
+                />
+                <Stack.Screen
+                    name="Edit Item"
+                    component={EditItemProperties}
                     options={{
                         headerShown: true,
                         header: TopNavbar,
