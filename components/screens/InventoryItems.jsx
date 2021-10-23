@@ -16,6 +16,8 @@ import SimpleNavbar from "../SimpleNavbar";
 import SimpleButton from "../SimpleButton";
 
 import * as SQLite from "expo-sqlite";
+import "react-native-get-random-values";
+import * as uuid from "uuid";
 
 const db = SQLite.openDatabase("invman");
 
@@ -85,7 +87,7 @@ class InventoryItems extends React.Component {
                 <View style={[sharedStyles.content]}>
                     <ScrollView contentContainerStyle={[styles.scrollView]}>
                         {this.state.items.map((item) => (
-                            <View style={styles.inventoryCard}>
+                            <View style={styles.inventoryCard} key={uuid.v4()}>
                                 <TouchableOpacity
                                     style={styles.inventoryTouchable}
                                     onPress={() =>
@@ -94,13 +96,10 @@ class InventoryItems extends React.Component {
                                             item
                                         )
                                     }
-                                    key={item.item_id + "_" + item.inv_id}
                                 >
                                     <Text>{item.item_name}</Text>
                                 </TouchableOpacity>
-                                <Text key={item.item_id * -1}>
-                                    {item.item_qty}
-                                </Text>
+                                <Text>{item.item_qty}</Text>
                             </View>
                         ))}
                     </ScrollView>

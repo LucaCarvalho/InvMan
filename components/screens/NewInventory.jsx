@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React from "react";
+import { StyleSheet, View, Alert } from "react-native";
 import DbHandler from "../../database/DbHandler";
 import { sharedStyles } from "../SharedStyles";
 import SimpleNavbar from "../SimpleNavbar";
@@ -18,8 +18,15 @@ export default function NewInventory({ navigation }) {
                 <TextInputWButton
                     placeholder={"Inventory name"}
                     onSubmit={(inventoryName) => {
-                        db.createInventory(inventoryName);
-                        navigation.goBack();
+                        db.createInventory(
+                            inventoryName,
+                            () => navigation.goBack(),
+                            () =>
+                                Alert.alert(
+                                    "Inventory already exists",
+                                    "Use a different name"
+                                )
+                        );
                     }}
                 ></TextInputWButton>
             </View>

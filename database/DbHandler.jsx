@@ -22,7 +22,7 @@ export default class DbHandler {
             db.transaction(
                 (tx) => {
                     tx.executeSql(
-                        "CREATE TABLE IF NOT EXISTS inventories (inv_id INTEGER PRIMARY KEY NOT NULL, inv_name TEXT NOT NULL);"
+                        "CREATE TABLE IF NOT EXISTS inventories (inv_id INTEGER PRIMARY KEY NOT NULL, inv_name TEXT NOT NULL UNIQUE);"
                     );
                 },
                 [],
@@ -71,12 +71,27 @@ export default class DbHandler {
         }, []);
     };
 
-    createItem = (itemName, invId) => {
+    createItem = (itemName, invId, onSuccess, onItemExists) => {
         db.transaction((tx) => {
             tx.executeSql(
-                "INSERT INTO items (item_name, inv_id) VALUES (?, ?);",
+                "SELECT * FROM items WHERE item_name=? AND inv_id=?;",
                 [itemName, invId],
-                () => {},
+                (_, { rows: { _array } }) => {
+                    if (!_array.length) {
+                        // If there isn't another item in this
+                        // inventory with the same name
+                        db.transaction((tx) => {
+                            tx.executeSql(
+                                "INSERT INTO items (item_name, inv_id) VALUES (?, ?);",
+                                [itemName, invId],
+                                () => onSuccess(),
+                                (t, err) => console.log(err)
+                            );
+                        });
+                    } else {
+                        onItemExists();
+                    }
+                },
                 (t, err) => console.log(err)
             );
         });
@@ -115,13 +130,15 @@ export default class DbHandler {
         });
     };
 
-    createInventory = (inventoryName) => {
+    createInventory = (inventoryName, onSuccess, onInventoryExists) => {
         db.transaction((tx) => {
             tx.executeSql(
                 "INSERT INTO inventories (inv_name) VALUES (?);",
                 [inventoryName],
-                () => {},
-                (t, err) => console.log(err)
+                () => onSuccess(),
+                (t, err) => {
+                    if (err.message.includes("UNIQUE")) onInventoryExists();
+                }
             );
         });
     };

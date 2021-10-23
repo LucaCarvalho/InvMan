@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React from "react";
+import { StyleSheet, View, Alert } from "react-native";
 import { sharedStyles } from "../SharedStyles";
 import SimpleNavbar from "../SimpleNavbar";
 import TextInputWButton from "../TextInputWButton";
@@ -18,8 +18,16 @@ export default function NewItem({ navigation, route }) {
                 <TextInputWButton
                     placeholder={"Item name"}
                     onSubmit={(itemName) => {
-                        db.createItem(itemName, route.params.inv_id);
-                        navigation.goBack();
+                        db.createItem(
+                            itemName,
+                            route.params.inv_id,
+                            () => navigation.goBack(),
+                            () =>
+                                Alert.alert(
+                                    "Item already exists",
+                                    "Use a different name"
+                                )
+                        );
                     }}
                 ></TextInputWButton>
             </View>

@@ -11,6 +11,7 @@
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "expo": "~42.0.1",
+    "expo-sqlite": "~9.2.1",
     "expo-status-bar": "~1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -19,7 +20,8 @@
     "react-native-screens": "~3.4.0",
     "react-native-web": "~0.13.12",
     "sqlite": "^4.0.23",
-    "expo-sqlite": "~9.2.1"
+    "uuid": "^8.3.2",
+    "react-native-get-random-values": "~1.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
