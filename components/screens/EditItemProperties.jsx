@@ -18,7 +18,7 @@ export default function EditItemProperties({ navigation, route }) {
             <View style={[sharedStyles.content, styles.content]}>
                 <TextInputWButton
                     onSubmit={(newItemName) =>
-                        db.updateItem(
+                        db.updateItemName(
                             route.params.item_id,
                             newItemName,
                             navigation.goBack

@@ -18,14 +18,17 @@ import SimpleButton from "../SimpleButton";
 import * as SQLite from "expo-sqlite";
 import "react-native-get-random-values";
 import * as uuid from "uuid";
+import NumberInput from "../NumberInput";
+import DbHandler from "../../database/DbHandler";
 
-const db = SQLite.openDatabase("invman");
+const sqliteDb = SQLite.openDatabase("invman");
 
 class InventoryItems extends React.Component {
     constructor(props) {
         super(props);
         this.state = { items: {} };
         this.getItems();
+        this.db = new DbHandler();
     }
 
     componentDidMount() {
@@ -64,7 +67,7 @@ class InventoryItems extends React.Component {
     }
 
     getItems = () => {
-        db.transaction((tx) => {
+        sqliteDb.transaction((tx) => {
             tx.executeSql(
                 "SELECT * FROM items WHERE inv_id=?",
                 [this.props.route.params.inv_id],
@@ -99,7 +102,13 @@ class InventoryItems extends React.Component {
                                 >
                                     <Text>{item.item_name}</Text>
                                 </TouchableOpacity>
-                                <Text>{item.item_qty}</Text>
+                                <NumberInput
+                                    onChangeNumber={(qty) =>
+                                        this.db.updateItemQty(item.item_id, qty)
+                                    }
+                                >
+                                    {item.item_qty}
+                                </NumberInput>
                             </View>
                         ))}
                     </ScrollView>
@@ -140,5 +149,12 @@ const styles = StyleSheet.create({
     },
     inventoryTouchable: {
         flex: 0.8,
+    },
+    numberInput: {
+        borderWidth: 1,
+        borderColor: "orange",
+        paddingHorizontal: 10,
+        textAlign: "center",
+        width: 50,
     },
 });

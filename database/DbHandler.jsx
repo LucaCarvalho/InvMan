@@ -108,12 +108,23 @@ export default class DbHandler {
     //     });
     // };
 
-    updateItem = (item_id, item_name, navigateFunction) => {
+    updateItemName = (item_id, item_name, navigateFunction) => {
         db.transaction((tx) => {
             tx.executeSql(
                 "UPDATE items SET item_name=? WHERE item_id=?",
                 [item_name, item_id],
                 (_, { rows: { _array } }) => navigateFunction(),
+                (t, err) => console.log("ERROR: ", err)
+            );
+        });
+    };
+
+    updateItemQty = (item_id, item_qty) => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                "UPDATE items SET item_qty=? WHERE item_id=?",
+                [item_qty, item_id],
+                (_, { rows: { _array } }) => {},
                 (t, err) => console.log("ERROR: ", err)
             );
         });
