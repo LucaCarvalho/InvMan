@@ -17,7 +17,6 @@ const sharedStyles = StyleSheet.create({
     optionsBar: {
         flex: 0.05,
         padding: 20,
-        backgroundColor: "orange",
         justifyContent: "space-evenly",
     },
 });

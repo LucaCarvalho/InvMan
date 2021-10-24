@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     navbar: {
         flex: 0.125,
         flexDirection: "row",
-        backgroundColor: "gold",
+        backgroundColor: "#ffb400",
         width: "100%",
         alignItems: "center",
         justifyContent: "space-between",

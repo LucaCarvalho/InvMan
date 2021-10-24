@@ -14,6 +14,7 @@ export default function SimpleButton(props) {
             backgroundColor: props.backgroundColor,
             justifyContent: "center",
             alignItems: "center",
+            borderRadius: 5,
         },
         buttonText: {
             fontSize: 20,
@@ -32,6 +33,6 @@ export default function SimpleButton(props) {
 SimpleButton.defaultProps = {
     height: 50,
     width: 50,
-    backgroundColor: "dodgerblue",
+    backgroundColor: "#2994b2",
     textColor: "black",
 };
